@@ -1,8 +1,8 @@
-package Com.cine.ms_sucursales.controller;
+package com.cine.ms_cliente.controller;
 
-import Com.cine.ms_sucursales.DTO.SucursalDTO;
-import Com.cine.ms_sucursales.model.Sucursal;
-import Com.cine.ms_sucursales.service.SucursalService;
+import com.cine.ms_sucursales.DTO.SucursalDTO;
+import com.cine.ms_sucursales.model.Sucursal;
+import com.cine.ms_sucursales.service.SucursalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
