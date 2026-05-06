@@ -1,6 +1,6 @@
-package com.cine.ms_cliente.controller;
+package com.cine.ms_sucursales.controller;
 
-import com.cine.ms_sucursales.DTO.SucursalDTO;
+import com.cine.ms_sucursales.dto.SucursalDTO;
 import com.cine.ms_sucursales.model.Sucursal;
 import com.cine.ms_sucursales.service.SucursalService;
 import jakarta.validation.Valid;

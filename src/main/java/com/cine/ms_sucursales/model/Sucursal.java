@@ -1,4 +1,4 @@
-package com.cine.ms_cliente.model;
+package com.cine.ms_sucursales.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
