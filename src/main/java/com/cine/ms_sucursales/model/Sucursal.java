@@ -28,5 +28,4 @@ public class Sucursal {
 
     @NotBlank(message = "Debes ingresar una direccion valida")
     private String direccion;
-
 }
