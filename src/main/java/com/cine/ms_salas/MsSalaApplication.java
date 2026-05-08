@@ -8,6 +8,6 @@ public class MsSalaApplication {
     public static void main(String[] args){
         System.setProperty("spring.profiles.active", "salas");
         SpringApplication.run(MsSalaApplication.class, args);
-        }
+    }
     
 }
