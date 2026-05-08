@@ -1,5 +1,6 @@
 package com.cine.ms_salas.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,5 +23,6 @@ public class Sala {
     private Integer capacidad;
     
     // Aqui no hay @ManyToOne porque Sucursal vive en otro microservicio ademas aun no se como conectarlos
+    @Column(name = "sucursal_id")   
     private Long sucursalId; 
 }
