@@ -27,7 +27,7 @@ public class SalaService {
         sala.setNombre(salaDTO.getNombre());
         sala.setCapacidad(salaDTO.getCapacidad());
         
-        // Guardamos el ID de la sucursal, pero NO creamos una relación @ManyToOne
+        // Guardamos el ID de la sucursal, pero aun no se crea la relacon
         sala.setSucursalId(salaDTO.getSucursalId()); 
 
         Sala guardada = salaRepository.save(sala);
