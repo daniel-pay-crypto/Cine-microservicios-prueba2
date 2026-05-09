@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j // Invocamos a SLF4J para dejar logs estructurados[cite: 8].
+@Slf4j // Invocamos a SLF4J para dejar logs estructurados
 @Service
 @RequiredArgsConstructor
 public class ClienteService {
@@ -39,13 +39,12 @@ public class ClienteService {
         cliente.setApellidos(request.getApellidos());
         cliente.setCorreo(request.getCorreo());
         cliente.setFechaNacimiento(request.getFechaNacimiento());
-djdjdjjdjd
+
         ClienteModel clienteGuardado = clienteRepository.save(cliente);
         log.info("Cliente guardado exitosamente con ID: {}", clienteGuardado.getId());
 
         return mapToResponse(clienteGuardado);
     }
-
 
     // 2. Listar todos los clientes
     public List<ClienteResponse> listarTodos() {
