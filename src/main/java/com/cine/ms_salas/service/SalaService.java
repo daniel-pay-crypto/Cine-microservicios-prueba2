@@ -31,7 +31,7 @@ public class SalaService {
         sala.setSucursalId(salaDTO.getSucursalId()); 
 
         Sala guardada = salaRepository.save(sala);
-        log.info("Sala guardada: {} con capacidad para  personas", guardada.getNombre(), guardada.getCapacidad());
+        log.info("Sala guardada: {} con capacidad para {} personas", guardada.getNombre(), guardada.getCapacidad());
         
         return mapToDTO(guardada);
     }
