@@ -8,7 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -22,31 +27,25 @@ public class GeneroController {
 
     @PostMapping
     public ResponseEntity<GeneroResponse> crearGenero(@Valid @RequestBody GeneroRequest request) {
-        log.info("Petición REST recibida para crear un nuevo género: {}", request.getNombre());
+        log.info("Peticion REST recibida para crear un nuevo genero: {}", request.getNombre());
         GeneroResponse response = generoService.guardarGenero(request);
-        
-        // Devolvemos HTTP 201 Created
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // GET: /api/v1/generos -> Lista todos los géneros
     @GetMapping
     public ResponseEntity<List<GeneroResponse>> listarGeneros() {
-        log.info("Petición REST recibida para listar todos los géneros");
+        log.info("Peticion REST recibida para listar todos los generos");
         List<GeneroResponse> lista = generoService.listarTodos();
         
         if (lista.isEmpty()) {
-            // Devolvemos 204 No Content si la lista está vacía
             return ResponseEntity.noContent().build();
         }
-        // Devolvemos 200 OK con la lista
         return ResponseEntity.ok(lista);
     }
 
-    // GET: /api/v1/generos/{id} -> Busca un género específico por su ID
     @GetMapping("/{id}")
     public ResponseEntity<GeneroResponse> buscarGenero(@PathVariable Integer id) {
-        log.info("Petición REST recibida para buscar género por ID: {}", id);
+        log.info("Peticion REST recibida para buscar genero por ID: {}", id);
         GeneroResponse response = generoService.buscarPorId(id);
         return ResponseEntity.ok(response);
     }
