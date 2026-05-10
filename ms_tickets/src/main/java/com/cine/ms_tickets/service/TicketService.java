@@ -1,62 +1,65 @@
 package com.cine.ms_tickets.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.cine.ms_tickets.dto.TicketRequest;
+import com.cine.ms_tickets.dto.TicketResponse;
 import com.cine.ms_tickets.model.Ticket;
 import com.cine.ms_tickets.repository.TicketRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class TicketService {
 
-    @Autowired
-    private TicketRepository ticketRepository;
+    private final TicketRepository ticketRepository;
 
-    // 1. Obtener todos los tickets
-    public List<Ticket> obtenerTodosLosTickets() {
-        return ticketRepository.findAll();
-    }
+    public TicketResponse guardarTicket(TicketRequest request) {
+        log.info("Iniciando proceso de emision de ticket");
 
-    // 2. Obtener un ticket específico por su ID
-    public Optional<Ticket> obtenerTicketPorId(Integer id) {
-        return ticketRepository.findById(id);
-    }
-
-    // 3. Crear o actualizar un ticket (Con regla de negocio)
-    public Ticket guardarTicket(Ticket ticket) {
-        if (ticket.getId() == null && ticket.getAsientoId() != null) {
-            boolean asientoOcupado = ticketRepository.existsByAsientoId(ticket.getAsientoId());
-            if (asientoOcupado) {
-                throw new RuntimeException("Error: El asiento con ID " + ticket.getAsientoId() + " ya ha sido vendido.");
-            }
+        // Regla de negocio: No vender un asiento ya ocupado
+        if (ticketRepository.existsByAsientoId(request.getAsientoId())) {
+            log.error("El asiento {} ya esta ocupado", request.getAsientoId());
+            throw new RuntimeException("Error: El asiento ya ha sido vendido.");
         }
-        return ticketRepository.save(ticket);
+
+        Ticket ticket = Ticket.builder()
+                .puesto(request.getPuesto())
+                .precio(request.getPrecio())
+                .clienteId(request.getClienteId())
+                .peliculaId(request.getPeliculaId())
+                .asientoId(request.getAsientoId())
+                .build();
+
+        Ticket guardado = ticketRepository.save(ticket);
+        log.info("Ticket emitido con exito, ID: {}", guardado.getId());
+        return mapToResponse(guardado);
     }
 
-    // 4. Buscar tickets por ID de cliente
-    public List<Ticket> obtenerTicketsPorCliente(Integer clienteId) {
-        return ticketRepository.findByClienteId(clienteId);
+    public List<TicketResponse> listarTodos() {
+        return ticketRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    // 5. Buscar tickets por ID de película
-    public List<Ticket> obtenerTicketsPorPelicula(Integer peliculaId) {
-        return ticketRepository.findByPeliculaId(peliculaId);
+    public TicketResponse buscarPorId(Integer id) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ticket no encontrado con ID: " + id));
+        return mapToResponse(ticket);
     }
 
-    // 6. Buscar tickets por el nombre del puesto (ej. "A12")
-    public List<Ticket> obtenerTicketsPorPuesto(String puesto) {
-        return ticketRepository.findByPuesto(puesto);
-    }
-
-    // 7. Eliminar un ticket
-    public void eliminarTicket(Integer id) {
-        if (ticketRepository.existsById(id)) {
-            ticketRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Error: No se puede eliminar el ticket porque el ID " + id + " no existe.");
-        }
+    private TicketResponse mapToResponse(Ticket ticket) {
+        return TicketResponse.builder()
+                .id(ticket.getId())
+                .puesto(ticket.getPuesto())
+                .precio(ticket.getPrecio())
+                .clienteId(ticket.getClienteId())
+                .peliculaId(ticket.getPeliculaId())
+                .asientoId(ticket.getAsientoId())
+                .build();
     }
 }
