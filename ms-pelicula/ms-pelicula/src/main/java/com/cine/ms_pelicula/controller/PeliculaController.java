@@ -1,10 +1,12 @@
 package com.cine.ms_pelicula.controller;
 
+import com.cine.ms_pelicula.dto.PeliculaFullResponse;
 import com.cine.ms_pelicula.dto.PeliculaRequest;
-import com.cine.ms_pelicula.dto.PeliculaResponse;
 import com.cine.ms_pelicula.model.Pelicula;
 import com.cine.ms_pelicula.service.PeliculaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,73 +15,45 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 @RestController
-@RequestMapping("/api/peliculas")
+@RequestMapping("/api/v1/peliculas")
+@RequiredArgsConstructor
 public class PeliculaController {
 
-    @Autowired
-    private PeliculaService service;
+    private final PeliculaService service;
 
-    //
     @GetMapping
-    public ResponseEntity<List<PeliculaResponse>> listarTodas() {
-        List<PeliculaResponse> respuestas = service.listarTodas().stream()
-                .map(this::mapearAResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(respuestas);
+    public ResponseEntity<List<Pelicula>> listar() {
+        return ResponseEntity.ok(service.listarTodas());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PeliculaResponse> obtenerPorId(@PathVariable Long id) {
-        Pelicula pelicula = service.buscarPorId(id);
-        return ResponseEntity.ok(mapearAResponse(pelicula));
-    }
-//Take me back to the night we met...
-    @PostMapping
-    public ResponseEntity<PeliculaResponse> guardar(@RequestBody PeliculaRequest request) {
-        Pelicula nuevaPelicula = new Pelicula();
-        nuevaPelicula.setTitulo(request.getTitulo());
-        nuevaPelicula.setSinopsis(request.getSinopsis());
-        nuevaPelicula.setDuracionMinutos(request.getDuracionMinutos());
-        nuevaPelicula.setGeneroId(request.getGeneroId());
-        nuevaPelicula.setDirectorId(request.getDirectorId());
-
-        Pelicula guardada = service.guardar(nuevaPelicula);
-        return new ResponseEntity<>(mapearAResponse(guardada), HttpStatus.CREATED);
+    public ResponseEntity<Pelicula> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
-    // rutas feign para Ms-Genero y Ms-Director:
-
-    @GetMapping("/genero/{generoId}")
-    public ResponseEntity<List<PeliculaResponse>> listarPorGenero(@PathVariable Long generoId) {
-        List<PeliculaResponse> respuestas = service.buscarPorGenero(generoId).stream()
-                .map(this::mapearAResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(respuestas);
-    }
-//Because...
     @GetMapping("/director/{directorId}")
-    public ResponseEntity<List<PeliculaResponse>> listarPorDirector(@PathVariable Long directorId) {
-        List<PeliculaResponse> respuestas = service.buscarPorDirector(directorId).stream()
-                .map(this::mapearAResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(respuestas);
+    public ResponseEntity<List<Pelicula>> listarPorDirector(@PathVariable Long directorId) {
+        return ResponseEntity.ok(service.buscarPorDirector(directorId));
     }
-//...Because I still have some things to say to her...
 
-    // Método auxiliar para convertir Modelo a DTO :D
-    private PeliculaResponse mapearAResponse(Pelicula pelicula) {
-        PeliculaResponse response = new PeliculaResponse();
-        response.setId(pelicula.getId());
-        response.setTitulo(pelicula.getTitulo());
-        response.setSinopsis(pelicula.getSinopsis());
-        response.setDuracionMinutos(pelicula.getDuracionMinutos());
-        response.setGeneroId(pelicula.getGeneroId());
-        response.setDirectorId(pelicula.getDirectorId());
-        return response;
+    @PostMapping
+    public ResponseEntity<Pelicula> guardar(@Valid @RequestBody PeliculaRequest request) {
+        Pelicula p = new Pelicula();
+        p.setTitulo(request.getTitulo());
+        p.setDuracionMinutos(request.getDuracionMinutos());
+        p.setGeneroId(request.getGeneroId());
+        p.setDirectorId(request.getDirectorId());
+        return new ResponseEntity<>(service.guardar(p), HttpStatus.CREATED);
     }
+    // Llamadas lógicas a los otros microservicios (Lado "Muchos")
+    @GetMapping("/{id}/detalles")
+    public ResponseEntity<PeliculaFullResponse> obtenerDetalleCompleto(@PathVariable Long id) {
+    PeliculaFullResponse detalle = service.obtenerDetalleCompleto(id);
+    return ResponseEntity.ok(detalle);
+
+    
+    }
+
 }
