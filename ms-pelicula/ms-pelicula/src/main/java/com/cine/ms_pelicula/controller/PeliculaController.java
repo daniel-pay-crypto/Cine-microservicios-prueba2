@@ -30,7 +30,6 @@ public class PeliculaController {
     @GetMapping
     public ResponseEntity<List<Pelicula>> listar() {
         return ResponseEntity.ok(service.listarTodas());
-
     }
 
 
@@ -38,7 +37,6 @@ public class PeliculaController {
     @GetMapping("/{id}")
     public ResponseEntity<Pelicula> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorId(id));
-
     }
 
     @GetMapping("/director/{directorId}")
@@ -65,4 +63,13 @@ public class PeliculaController {
     PeliculaFullResponse detalle = service.obtenerDetalleCompleto(id);
     return ResponseEntity.ok(detalle);
     }
+    // Llamadas lógicas a los otros microservicios (Lado "Muchos")
+    @GetMapping("/{id}/detalles")
+    public ResponseEntity<PeliculaFullResponse> obtenerDetalleCompleto(@PathVariable Long id) {
+    PeliculaFullResponse detalle = service.obtenerDetalleCompleto(id);
+    return ResponseEntity.ok(detalle);
+
+    
+    }
+
 }
