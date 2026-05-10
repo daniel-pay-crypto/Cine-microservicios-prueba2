@@ -1,9 +1,9 @@
 package com.cine.ms_pelicula.service;
 
-import com.cine.ms_pelicula.dto.PeliculaFullResponse;
 import com.cine.ms_pelicula.dto.GeneroDTO;
-import com.cine.ms_pelicula.dto.TicketDTO;
+import com.cine.ms_pelicula.dto.PeliculaFullResponse;
 import com.cine.ms_pelicula.dto.SalaDTO;
+import com.cine.ms_pelicula.dto.TicketDTO;
 import com.cine.ms_pelicula.exception.ResourceNotFoundException;
 import com.cine.ms_pelicula.model.Pelicula;
 import com.cine.ms_pelicula.repository.PeliculaRepository;
@@ -22,14 +22,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class PeliculaService {
 
     private final PeliculaRepository repository;
-    // Inyectamos los clientes Feign para comunicarnos con los otros microservicios
     private final GeneroFeign generoFeign;
     private final TicketFeign ticketFeign;
     private final SalaFeign salaFeign;
 
     @Transactional(readOnly = true)
     public List<Pelicula> listarTodas() {
-        log.info("Listando todas las películas");
+        log.info("Obteniendo todas las películas");
         return repository.findAll();
     }
 
@@ -42,22 +41,22 @@ public class PeliculaService {
 
     @Transactional
     public Pelicula guardar(Pelicula pelicula) {
-        log.info("Guardando película: {}", pelicula.getTitulo());
+        log.info("Registrando nueva película: {}", pelicula.getTitulo());
         return repository.save(pelicula);
     }
 
     @Transactional(readOnly = true)
     public List<Pelicula> buscarPorDirector(Long directorId) {
-        log.info("Buscando películas del director con ID: {}", directorId);
+        log.info("Buscando películas del director ID: {}", directorId);
         return repository.findByDirectorId(directorId);
     }
 
     @Transactional(readOnly = true)
     public PeliculaFullResponse obtenerDetalleCompleto(Long id) {
-        log.info("Obteniendo detalle completo de la película con el ID: {}", id);
+        log.info("Obteniendo detalle completo de la película ID: {}", id);
         
         Pelicula pelicula = this.buscarPorId(id);
-        
+
         List<GeneroDTO> generos = generoFeign.getGenerosByPeliculaId(id);
         List<TicketDTO> tickets = ticketFeign.getTicketsByPeliculaId(id);
         List<SalaDTO> salas = salaFeign.getSalasByPeliculaId(id);
@@ -65,7 +64,6 @@ public class PeliculaService {
         PeliculaFullResponse response = new PeliculaFullResponse();
         response.setId(pelicula.getId());
         response.setTitulo(pelicula.getTitulo());
-        
         response.setGeneros(generos);
         response.setTickets(tickets);
         response.setSalas(salas);
@@ -74,14 +72,14 @@ public class PeliculaService {
     }
 }
 
-// Interfaces Feign para comunicarse con los otros microservicios (Género, Tickets, Salas)
-@FeignClient(name = "ms-genero", url = "http://localhost:8084/api/v1/generos")
+// Interfaces Feign
+@FeignClient(name = "ms-genero", url = "http://localhost:8090/api/v1/generos")
 interface GeneroFeign {
     @GetMapping("/pelicula/{peliculaId}")
     List<GeneroDTO> getGenerosByPeliculaId(@PathVariable("peliculaId") Long peliculaId);
 }
 
-@FeignClient(name = "ms-tickets", url = "http://localhost:8085/api/v1/tickets")
+@FeignClient(name = "ms-tickets", url = "http://localhost:8089/api/v1/tickets")
 interface TicketFeign {
     @GetMapping("/pelicula/{peliculaId}")
     List<TicketDTO> getTicketsByPeliculaId(@PathVariable("peliculaId") Long peliculaId);
