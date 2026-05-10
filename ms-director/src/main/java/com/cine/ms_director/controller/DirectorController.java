@@ -34,6 +34,11 @@ public class DirectorController {
         return ResponseEntity.ok(service.obtenerDirectorConPeliculas(id));
     }
 
+    @GetMapping("/{id}/peliculas")
+    public ResponseEntity<DirectorResponse> obtenerConPeliculas(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerDirectorConPeliculas(id));
+    }
+
     @PostMapping
     public ResponseEntity<Director> guardar(@Valid @RequestBody DirectorRequest request) {
         Director d = new Director();
