@@ -1,8 +1,7 @@
-package com.cine.ms_salas.dto;
+package com.cine.ms_salas_plural.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Data

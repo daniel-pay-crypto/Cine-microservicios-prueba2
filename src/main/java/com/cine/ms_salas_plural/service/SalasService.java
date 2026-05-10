@@ -1,10 +1,10 @@
-package com.cine.ms_salas.service;
+package com.cine.ms_salas_plural.service;
 
-import com.cine.ms_salas.dto.SalasDTO;
 import com.cine.ms_salas.model.Sala;
-import com.cine.ms_salas.model.Salas;
 import com.cine.ms_salas.repository.SalaRepository;
-import com.cine.ms_salas.repository.SalasRepository;
+import com.cine.ms_salas_plural.dto.SalasDTO;
+import com.cine.ms_salas_plural.model.Salas;
+import com.cine.ms_salas_plural.repository.SalasRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
