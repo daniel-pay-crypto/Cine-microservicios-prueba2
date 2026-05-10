@@ -1,17 +1,15 @@
-package com.cine.ms_sucursales.dto;
+package com.cine.ms_salas.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SucursalDTO {
+public class SalaDTO {
     private Long id;
     private String nombre;
-    private String direccion;
-    private Long comunaid;
+    private Integer capacidad;
+    private Long sucursalId;
 }

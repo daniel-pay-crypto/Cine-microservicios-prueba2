@@ -1,14 +1,13 @@
-package com.cine.ms_ubicacion;
+package com.cine.ms_salas;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.cine.ms_salas.MsSalaApplication;
-
 @SpringBootApplication
-public class MsUbicacionApplication {
+public class MsSalaApplication { 
     public static void main(String[] args){
-        System.setProperty("spring.profiles.active", "ubicacion");
+        System.setProperty("spring.profiles.active", "salas");
         SpringApplication.run(MsSalaApplication.class, args);
     }
+    
 }

@@ -1,5 +1,6 @@
-package com.cine.ms_ubicacion.model;
+package com.cine.ms_salas.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -11,21 +12,29 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "salas")
 @Data
-@Table(name = "comunas")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comuna {
-
+public class Salas {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre;
 
+    //Relación directa con sala física
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "region_id", nullable = false)
-    private Region region;
+    @JoinColumn(name = "sala_id")
+    private Sala sala; 
 
+    //Lo coloco asi pormientras aun no se como lo tienen
+    @Column(name = "pelicula_id")
+    private Long peliculaId;
+
+    //Lo mismo q el anterior
+    @Column(name = "fecha_inicio")
+    private LocalDateTime fechaInicio;
 }
