@@ -1,5 +1,7 @@
 package com.cine.ms_pelicula.controller;
 
+
+
 import com.cine.ms_pelicula.dto.PeliculaFullResponse;
 import com.cine.ms_pelicula.dto.PeliculaRequest;
 import com.cine.ms_pelicula.model.Pelicula;
@@ -19,15 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/peliculas")
 @RequiredArgsConstructor
+
 public class PeliculaController {
 
     private final PeliculaService service;
+
 
     @GetMapping
     public ResponseEntity<List<Pelicula>> listar() {
         return ResponseEntity.ok(service.listarTodas());
     }
 
+
+    
     @GetMapping("/{id}")
     public ResponseEntity<Pelicula> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorId(id));
@@ -36,7 +42,10 @@ public class PeliculaController {
     @GetMapping("/director/{directorId}")
     public ResponseEntity<List<Pelicula>> listarPorDirector(@PathVariable Long directorId) {
         return ResponseEntity.ok(service.buscarPorDirector(directorId));
+
     }
+
+//p para referenciar a la película que se va a guardar
 
     @PostMapping
     public ResponseEntity<Pelicula> guardar(@Valid @RequestBody PeliculaRequest request) {
@@ -46,6 +55,13 @@ public class PeliculaController {
         p.setGeneroId(request.getGeneroId());
         p.setDirectorId(request.getDirectorId());
         return new ResponseEntity<>(service.guardar(p), HttpStatus.CREATED);
+    }
+
+    // Llamadas lógicas a los otros microservicios (Lado "Muchos")
+    @GetMapping("/{id}/detalles")
+    public ResponseEntity<PeliculaFullResponse> obtenerDetalleCompleto(@PathVariable Long id) {
+    PeliculaFullResponse detalle = service.obtenerDetalleCompleto(id);
+    return ResponseEntity.ok(detalle);
     }
     // Llamadas lógicas a los otros microservicios (Lado "Muchos")
     @GetMapping("/{id}/detalles")
