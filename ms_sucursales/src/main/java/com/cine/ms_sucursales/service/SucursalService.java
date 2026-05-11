@@ -81,4 +81,12 @@ public class SucursalService {
             throw new RuntimeException("Error interno al validar la comuna. Intente más tarde.");
         }
     }
+
+    public SucursalDTO buscarPorId(Long id) {
+        log.info("Buscando sucursal con ID: {}", id);
+        Sucursal sucursal = sucursalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("La sucursal con ID " + id + " no existe."));
+        return mapToDTO(sucursal);
+    }
+
 }

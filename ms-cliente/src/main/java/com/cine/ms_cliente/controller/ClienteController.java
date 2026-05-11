@@ -36,4 +36,10 @@ public class ClienteController {
         log.info("Endpoint GET /api/v1/clientes/{}/tickets consumido", id);
         return ResponseEntity.ok(service.obtenerClienteConTickets(id));
     }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> obtenerPorId(@PathVariable Long id) {
+        log.info("Endpoint GET /api/v1/clientes/{} consumido", id);
+        return ResponseEntity.ok(service.buscarPorId(id));
+    }
 }

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.cine.ms_salas_plural.dto.SalasDTO;
 import com.cine.ms_salas_plural.model.Salas;
 import com.cine.ms_salas_plural.repository.SalasRepository;
+import com.cine.ms_salas_plural.client.SalaClient;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,24 +17,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SalasService {
 
-    //Usamos el repositorio propio de este microservicio
     private final SalasRepository salasRepository; 
+    private final SalaClient salaClient;
 
     public SalasDTO crearSalas(SalasDTO dto) {
-        log.info("Intentando programar una nueva película en la sala ID: {}", dto.getSalaId());
+        log.info("Intentando programar una nueva película en la sala física ID: {}", dto.getSalaId());
 
-        /* 
-        Aquí ya no validamos con salaRepository.findById porque la tabla salas 
-        está en otro microservicio. Luego usaremos Feign para validar.
-        */
+        try {
+            salaClient.buscarPorId(dto.getSalaId());
+            log.info("Sala física validada correctamente.");
+        } catch (FeignException.NotFound e) {
+            log.error("La sala física con ID {} no existe.", dto.getSalaId());
+            throw new RuntimeException("No se puede programar. La sala física con ID " + dto.getSalaId() + " no existe.");
+        } catch (FeignException e) {
+            log.error("Error de conexión con ms-salas: {}", e.getMessage());
+            throw new RuntimeException("Error interno al validar la sala física.");
+        }
 
         Salas nuevaSalas = new Salas();
-        
-        //Ahora asignamos el ID directamente como un Long
         nuevaSalas.setSalaId(dto.getSalaId());
         nuevaSalas.setPeliculaId(dto.getPeliculaId());
         
-        // Le agregamos fecha actual si el usuario no envía una
         if (dto.getFechaInicio() == null) {
             nuevaSalas.setFechaInicio(LocalDateTime.now());
         } else {
@@ -52,12 +57,15 @@ public class SalasService {
                 .collect(Collectors.toList());
     }
 
-    // Esto es para convertir de Entidad a DTO
+    public SalasDTO obtenerPorSalaId(Long salaId) {
+        Salas sala = salasRepository.findBySalaId(salaId)
+                .orElseThrow(() -> new RuntimeException("Programación para la sala con ID " + salaId + " no encontrada"));
+        return mapToDTO(sala);
+    }
+
     private SalasDTO mapToDTO(Salas entity) {
         SalasDTO dto = new SalasDTO();
         dto.setId(entity.getId());
-        
-        // Obtenemos el ID directamente del campo salaId de la entidad
         dto.setSalaId(entity.getSalaId()); 
         dto.setPeliculaId(entity.getPeliculaId());
         dto.setFechaInicio(entity.getFechaInicio());

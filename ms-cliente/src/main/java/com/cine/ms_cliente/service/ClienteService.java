@@ -1,24 +1,20 @@
 package com.cine.ms_cliente.service;
 
+import com.cine.ms_cliente.client.TicketFeignClient;
 import com.cine.ms_cliente.dto.ClienteDetalleDTO;
 import com.cine.ms_cliente.dto.TicketDTO;
 import com.cine.ms_cliente.model.Cliente;
 import com.cine.ms_cliente.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import java.util.List;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import java.util.List;
 
-// Servicio para manejar la lógica de negocio relacionada con Clientes
 @Service
 @RequiredArgsConstructor
 public class ClienteService {
 
-    // Manejo de Logs estructurados (SLF4J)
     private static final Logger log = LoggerFactory.getLogger(ClienteService.class);
 
     private final ClienteRepository repository;
@@ -44,11 +40,9 @@ public class ClienteService {
         log.info("Guardando nuevo cliente en la base de datos");
         return repository.save(cliente);
     }
-}
 
-// Interfaz Feign Cliente
-@FeignClient(name = "ms-tickets", url = "http://localhost:8089/api/v1/tickets")
-interface TicketFeignClient {
-    @GetMapping("/cliente/{clienteId}")
-    List<TicketDTO> obtenerTickets(@PathVariable("clienteId") Long clienteId);
+    public Cliente buscarPorId(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    }
+
 }

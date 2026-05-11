@@ -53,4 +53,11 @@ public class SucursalController {
         sucursalService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SucursalDTO> buscarPorId(@PathVariable Long id) {
+        log.info("Recibida petición GET para buscar sucursal con ID: {}", id);
+        return ResponseEntity.ok(sucursalService.buscarPorId(id));
+    }
+    
 }
