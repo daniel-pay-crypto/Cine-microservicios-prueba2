@@ -19,10 +19,13 @@ public class Sala {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private String nombre;
     private Integer capacidad;
     
-    // Aqui no hay @ManyToOne porque Sucursal vive en otro microservicio ademas aun no se como conectarlos
     @Column(name = "sucursal_id")   
     private Long sucursalId; 
+
+    @Column(name = "tipo_id", nullable = false)
+    private Integer tipoId;
 }
