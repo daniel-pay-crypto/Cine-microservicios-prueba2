@@ -43,4 +43,12 @@ public class ComunaService {
             comuna.getRegion().getNombre()
         );
     }
+
+    public ComunaDTO buscarPorId(Long id) {
+        log.info("Buscando comuna con ID: {}", id);
+        Comuna comuna = comunaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("La comuna con ID " + id + " no existe."));
+        return mapToDTO(comuna);
+    }
+    
 }

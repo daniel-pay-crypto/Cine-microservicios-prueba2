@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SalaDTO {
 
-    @NotNull(message = "El Id de la sala es obligatorio")
-    private Long id;
+    private Long id; 
     
     @NotBlank(message = "El nombre de la sala no puede estar vacio")
     private String nombre;
@@ -22,6 +21,9 @@ public class SalaDTO {
     @Min(value = 10, message = "El valor minimo de capacidad es 10")
     private Integer capacidad;
 
-    @NotNull(message = "El ID es obligatorio")
+    @NotNull(message = "El ID de sucursal es obligatorio")
     private Long sucursalId;
+
+    @NotNull(message = "El ID del tipo de sala es obligatorio")
+    private Integer tipoId;
 }
