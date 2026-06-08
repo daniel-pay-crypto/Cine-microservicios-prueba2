@@ -2,7 +2,6 @@ package com.cine.ms_salas.controller;
 
 import com.cine.ms_salas.dto.SalaDTO;
 import com.cine.ms_salas.service.SalaService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
