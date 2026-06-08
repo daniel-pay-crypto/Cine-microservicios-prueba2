@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/sala")
-@RequiredArgsConstructor
-public class SalaController {
+@RequestMapping("/api/v2/sala")
 
-    private final SalaService salaService;
+public class SalaController {
+    
+    @Autowired
+    private SalaService salaService;
 
     @GetMapping
     public ResponseEntity<List<SalaDTO>> listarSalas() {

@@ -13,12 +13,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class SalasService {
 
-    private final SalasRepository salasRepository; 
-    private final SalaClient salaClient;
+    @Autowired
+    private SalasRepository salasRepository; 
+
+    @Autowired
+    private SalaClient salaClient;
 
     public SalasDTO crearSalas(SalasDTO dto) {
         log.info("Intentando programar una nueva película en la sala física ID: {}", dto.getSalaId());

@@ -14,11 +14,12 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/regiones")
-@RequiredArgsConstructor
+@RequestMapping("/api/v2/regiones")
+
 public class RegionController {
 
-    private final RegionService regionService;
+    @Autowired
+    private RegionService regionService;
 
     @GetMapping
     public ResponseEntity<List<RegionDTO>> listarTodas() {

@@ -13,13 +13,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class SalaService {
 
-    private final SalaRepository salaRepository;
-    private final TipoClient tipoClient;
-    private final SucursalClient sucursalClient;
+    @Autowired
+    private  SalaRepository salaRepository;
+
+    @Autowired
+    private TipoClient tipoClient;
+
+    @Autowired
+    private SucursalClient sucursalClient;
 
     public List<SalaDTO> listarTodas() {
         return salaRepository.findAll().stream()

@@ -15,11 +15,11 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/comunas")
-@RequiredArgsConstructor
+@RequestMapping("/api/v2/comunas")
 public class ComunaController {
 
-    private final ComunaService comunaService;
+    @Autowired
+    private ComunaService comunaService;
 
     @GetMapping
     public ResponseEntity<List<ComunaDTO>> listarTodas() {
