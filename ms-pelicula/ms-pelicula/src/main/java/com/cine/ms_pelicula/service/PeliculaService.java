@@ -25,6 +25,8 @@ public class PeliculaService {
     private final GeneroFeign generoFeign;
     private final TicketFeign ticketFeign;
     private final SalaFeign salaFeign;
+    private final GeneroClient generoClient;
+    private final DirectorClient directorClient;
 
     @Transactional(readOnly = true)
     public List<Pelicula> listarTodas() {
@@ -41,9 +43,22 @@ public class PeliculaService {
 
     @Transactional
     public Pelicula guardar(Pelicula pelicula) {
-        log.info("Registrando nueva película: {}", pelicula.getTitulo());
-        return repository.save(pelicula);
+    log.info("Validando existencia de Género (ID: {}) y Director (ID: {})", 
+             pelicula.getGeneroId(), pelicula.getDirectorId());
+
+    try {
+        generoClient.buscarPorId(pelicula.getGeneroId());
+        
+        directorClient.buscarPorId(pelicula.getDirectorId());
+        
+        log.info("Validaciones exitosas. Procediendo a guardar película.");
+    } catch (feign.FeignException.NotFound e) {
+        log.error("Error: Género o Director no encontrado");
+        throw new RuntimeException("Error: El Género o el Director especificado no existe.");
     }
+
+    return repository.save(pelicula);
+}
 
     @Transactional(readOnly = true)
     public List<Pelicula> buscarPorDirector(Long directorId) {

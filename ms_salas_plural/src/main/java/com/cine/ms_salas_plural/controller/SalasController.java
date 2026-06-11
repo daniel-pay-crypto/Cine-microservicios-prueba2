@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,4 +31,11 @@ public class SalasController {
     public ResponseEntity<List<SalasDTO>> listarSalas() {
         return ResponseEntity.ok(salasService.listarTodas());
     }
+
+    @GetMapping("/{salaId}")
+    public ResponseEntity<SalasDTO> obtenerPorSalaId(@PathVariable("salaId") Long salaId) {
+        SalasDTO sala = salasService.obtenerPorSalaId(salaId);
+        return ResponseEntity.ok(sala); // Retorna 200 OK con los datos
+    }
+
 }

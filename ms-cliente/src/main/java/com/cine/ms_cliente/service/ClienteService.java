@@ -18,7 +18,6 @@ import reactor.core.publisher.Mono; //EYE
 @Service
 public class ClienteService {
 
-    // Manejo de Logs estructurados (SLF4J)
     private static final Logger log = LoggerFactory.getLogger(ClienteService.class);
 
     @Autowired
@@ -29,7 +28,7 @@ public class ClienteService {
 
     public ClienteDetalleDTO obtenerClienteConTickets(Long id) {
         log.info("Buscando cliente con el id: {}", id);
-        Cliente cliente = repository.findById(id) .orElseThrow(() -> new RuntimeException("Cliente no encontrado u no existe."));
+        Cliente cliente = repository.findById(id).orElseThrow(() -> new RuntimeException("Cliente no encontrado u no existe."));
 
         ClienteDetalleDTO dto = new ClienteDetalleDTO();
         dto.setId(cliente.getId());
@@ -65,5 +64,4 @@ public class ClienteService {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Cliente no encontrado."));
     }
 
-    
 }

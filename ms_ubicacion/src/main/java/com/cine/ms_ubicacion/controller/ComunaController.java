@@ -36,4 +36,10 @@ public class ComunaController {
 
         //hola
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ComunaDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(comunaService.buscarPorId(id));
+    }
+    
 }

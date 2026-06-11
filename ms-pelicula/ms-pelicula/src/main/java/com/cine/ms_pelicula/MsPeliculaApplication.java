@@ -2,14 +2,12 @@ package com.cine.ms_pelicula;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@FeignClient // Configuración de Feign Client para comunicarse con ms-cliente
+@EnableFeignClients 
 public class MsPeliculaApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(MsPeliculaApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(MsPeliculaApplication.class, args);
+    }
 }

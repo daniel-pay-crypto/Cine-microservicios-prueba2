@@ -49,4 +49,12 @@ public class TicketController {
         TicketResponse response = ticketService.buscarPorId(id);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/cliente/{clienteId}")
+    public ResponseEntity<List<TicketResponse>> buscarPorClienteId(@PathVariable Integer clienteId) {
+        log.info("Peticion REST recibida para buscar tickets del cliente: {}", clienteId);
+        List<TicketResponse> lista = ticketService.listarPorCliente(clienteId);
+        return ResponseEntity.ok(lista);
+    }
+    
 }

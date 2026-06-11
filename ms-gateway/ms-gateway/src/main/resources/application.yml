@@ -1,0 +1,25 @@
+server
+port: 8080
+spring:
+    application:
+        name: ms-gateway
+    cloud:
+        gateway:
+            routes:
+                - id: ms-cliente-route
+                #aca defino la direccion a la que Gateway enviara la peticion, en este caso a ms-clientes, que es el nombre del servicio registrado en Eureka
+                  uri: http://localhost:8081
+                  predicates:
+                      #aca defino el path que se usara para acceder a este servicio, en este caso /api/clientes/**, lo que significa que cualquier peticion que comience con /api/clientes/ sera redirigida a ms-clientes
+                    - Path=/api/v1/clientes/** #siempre con el mismo path que el microservicio, para que el gateway pueda redirigir correctamente la peticion
+                - id: ms-tickets-route
+                    #Direccion de mi ms-tickets.
+                  uri: http://localhost:8082
+                  predicates:
+                    - Path=/api/v1/tickets/**
+                    #aca defino el path que se usara para acceder a este servicio, en este caso /api/tickets/**, lo que significa que cualquier peticion que comience con /api/tickets/ sera redirigida a ms-tickets
+               
+                - id: ms-peliculas-route
+                  uri: http://localhost:8083
+                  predicates:
+                    - Path=/api/v1/peliculas/**
