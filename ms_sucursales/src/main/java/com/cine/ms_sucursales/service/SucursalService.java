@@ -1,10 +1,12 @@
 package com.cine.ms_sucursales.service;
 
+import static java.lang.Math.log;
+
 import com.cine.ms_sucursales.client.ComunaClient;
 import com.cine.ms_sucursales.dto.SucursalDTO;
 import com.cine.ms_sucursales.model.Sucursal;
 import com.cine.ms_sucursales.repository.SucursalRepository;
-import feign.FeignException; 
+import org.springframework.web.reactive.function.client.WebClientResponseException; 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,10 +87,10 @@ public class SucursalService {
             log.info("Verificando existencia de comuna ID: {} en ms-ubicacion...", comunaId);
             comunaClient.obtenerPorId(comunaId);
             log.info("Comuna validada con éxito.");
-        } catch (FeignException.NotFound e) {
+        } catch (WebClientResponseException.NotFound e) {
             log.error("La comuna ID {} no existe.", comunaId);
             throw new RuntimeException("Error: No se puede proceder porque la Comuna con ID " + comunaId + " no existe.");
-        } catch (FeignException e) {
+        } catch (WebClientResponseException e) {
             log.error("Error de comunicación con ms-ubicacion: {}", e.getMessage());
             throw new RuntimeException("Error interno al validar la comuna. Intente más tarde.");
         }

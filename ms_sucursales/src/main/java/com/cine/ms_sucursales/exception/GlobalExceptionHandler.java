@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
     }
 
-    //Esto atrapa cualquier otro error inesperado(Ej: "Sucursal no encontrada")
+    //Esto atrapa cualquier otro error inesperado
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> manejarErroresGenerales(RuntimeException ex) {
         Map<String, String> error = new HashMap<>();
