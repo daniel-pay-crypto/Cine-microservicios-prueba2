@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import com.cine.ms_salas_plural.dto.SalasDTO;
 import com.cine.ms_salas_plural.model.Salas;
 import com.cine.ms_salas_plural.repository.SalasRepository;
-import com.cine.ms_salas_plural.client.SalaClient;
-import feign.FeignException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -19,20 +19,30 @@ public class SalasService {
     @Autowired
     private SalasRepository salasRepository; 
 
+    
     @Autowired
-    private SalaClient salaClient;
+    private WebClient.Builder webClientBuilder;
 
     public SalasDTO crearSalas(SalasDTO dto) {
         log.info("Intentando programar una nueva película en la sala física ID: {}", dto.getSalaId());
 
+
         try {
-            salaClient.buscarPorId(dto.getSalaId());
+            //ajustar el puerto y la ruta según donde corra _sala física
+            webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8083/api/v1/salas-fisicas/" + dto.getSalaId()) 
+                    .retrieve()
+                    .bodyToMono(Object.class)
+                    .block();
+                    
             log.info("Sala física validada correctamente.");
-        } catch (FeignException.NotFound e) {
+            
+        } catch (WebClientResponseException.NotFound e) {
             log.error("La sala física con ID {} no existe.", dto.getSalaId());
             throw new RuntimeException("No se puede programar. La sala física con ID " + dto.getSalaId() + " no existe.");
-        } catch (FeignException e) {
-            log.error("Error de conexión con ms-salas: {}", e.getMessage());
+        } catch (WebClientResponseException e) {
+            log.error("Error de conexión con ms-salas físicas: {}", e.getMessage());
             throw new RuntimeException("Error interno al validar la sala física.");
         }
 
