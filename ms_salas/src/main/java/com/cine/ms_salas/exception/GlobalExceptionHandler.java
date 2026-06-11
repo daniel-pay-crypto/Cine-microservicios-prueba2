@@ -1,14 +1,14 @@
 package com.cine.ms_salas.exception;
 
-import com.cine.ms_salas.dto.ErrorResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import java.time.LocalDateTime;
-
 import org.springframework.web.ErrorResponse;
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
