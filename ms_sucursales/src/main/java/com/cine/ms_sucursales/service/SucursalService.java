@@ -7,16 +7,19 @@ import com.cine.ms_sucursales.repository.SucursalRepository;
 import feign.FeignException; 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class SucursalService {
 
-    private final SucursalRepository sucursalRepository;
+    @Autowired
+    private SucursalRepository sucursalRepository;
+    
+    @Autowired
     private final ComunaClient comunaClient; 
 
     public List<SucursalDTO> listarTodas() {

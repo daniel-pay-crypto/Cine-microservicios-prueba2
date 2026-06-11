@@ -5,19 +5,25 @@ import com.cine.ms_ubicacion.model.Comuna;
 import com.cine.ms_ubicacion.model.Region;
 import com.cine.ms_ubicacion.repository.ComunaRepository;
 import com.cine.ms_ubicacion.repository.RegionRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
+import otg.springframework.web.reactive.function.client.webClient;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class ComunaService {
 
-    private final ComunaRepository comunaRepository;
-    private final RegionRepository regionRepository;
+    @Autowired
+    private ComunaRepository comunaRepository;
+
+    @Autowired
+    private RegionRepository regionRepository;
+
+    @Autowired
+    private webClient.Builder webClientBuilder;
 
     public List<ComunaDTO> listarTodas() {
         return comunaRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());

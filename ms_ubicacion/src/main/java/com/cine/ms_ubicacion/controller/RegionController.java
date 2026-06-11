@@ -2,7 +2,6 @@ package com.cine.ms_ubicacion.controller;
 
 import com.cine.ms_ubicacion.dto.RegionDTO;
 import com.cine.ms_ubicacion.service.RegionService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +13,12 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/regiones")
-@RequiredArgsConstructor
+@RequestMapping("/api/v2/regiones")
+
 public class RegionController {
 
-    private final RegionService regionService;
+    @Autowired
+    private RegionService regionService;
 
     @GetMapping
     public ResponseEntity<List<RegionDTO>> listarTodas() {

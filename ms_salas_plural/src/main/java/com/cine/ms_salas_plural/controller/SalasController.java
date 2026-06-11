@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/salas")
-@RequiredArgsConstructor
+@RequestMapping("/api/v2/salas")
+
 public class SalasController {
 
-    private final SalasService salasService;
+    @Autowired
+    private SalasService salasService;
 
     @PostMapping
     public ResponseEntity<SalasDTO> crearFuncion(@Valid @RequestBody SalasDTO salasDTO) {

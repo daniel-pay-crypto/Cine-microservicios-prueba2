@@ -20,12 +20,11 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/sucursales")
-@RequiredArgsConstructor 
+@RequestMapping("/api/v2/sucursales")
 public class SucursalController {
 
-
-    private final SucursalService sucursalService; 
+    @Autowired
+    private SucursalService sucursalService; 
 
     @GetMapping
     public ResponseEntity<List<SucursalDTO>> listarTodas() {

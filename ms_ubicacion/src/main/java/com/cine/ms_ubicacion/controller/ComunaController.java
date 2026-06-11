@@ -2,7 +2,6 @@ package com.cine.ms_ubicacion.controller;
 
 import com.cine.ms_ubicacion.dto.ComunaDTO;
 import com.cine.ms_ubicacion.service.ComunaService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +14,11 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/comunas")
-@RequiredArgsConstructor
+@RequestMapping("/api/v2/comunas")
 public class ComunaController {
 
-    private final ComunaService comunaService;
+    @Autowired
+    private ComunaService comunaService;
 
     @GetMapping
     public ResponseEntity<List<ComunaDTO>> listarTodas() {

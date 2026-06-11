@@ -2,7 +2,6 @@ package com.cine.ms_salas.controller;
 
 import com.cine.ms_salas.dto.SalaDTO;
 import com.cine.ms_salas.service.SalaService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/sala")
-@RequiredArgsConstructor
-public class SalaController {
+@RequestMapping("/api/v2/sala")
 
-    private final SalaService salaService;
+public class SalaController {
+    
+    @Autowired
+    private SalaService salaService;
 
     @GetMapping
     public ResponseEntity<List<SalaDTO>> listarSalas() {
