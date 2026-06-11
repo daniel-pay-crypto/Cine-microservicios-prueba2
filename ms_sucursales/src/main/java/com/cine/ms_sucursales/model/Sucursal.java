@@ -6,8 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,13 +23,12 @@ public class Sucursal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre de la sucursal es obligatorio, no puede estar en blanco")
+    @Column(nullable = false)
     private String nombre;
 
-    @NotBlank(message = "Debes ingresar una direccion valida")
+    @Column(nullable = false)
     private String direccion;
 
-    @NotNull(message = "El ID de la comuna es obligatorio")
-    @Column(name = "comuna_id")
+    @Column(name = "comuna_id", nullable = false)
     private Long comunaId;
 }
