@@ -9,14 +9,17 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 @Entity
 @Table(name = "clientes")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cliente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotBlank(message = "El nombre es obligatorio")
@@ -24,6 +27,7 @@ public class Cliente {
     private String nombre;
 
     @NotBlank(message = "El apellido es obligatorio")
+    @Size(max = 100, message = "El apellido no puede superar 100 caracteres")
     private String apellido;
 
     @NotBlank(message = "El email es obligatorio")
