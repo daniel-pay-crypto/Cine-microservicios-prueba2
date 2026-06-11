@@ -13,15 +13,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SucursalDTO {
 
-    @NotNull(message = "El Id no puede estar vacio")
     private Long id;
 
-    @NotBlank(message = "El nombre de la sucursal no debe estar vacio")
+    @NotBlank(message = "El nombre de la sucursal no debe estar vacío")
     private String nombre;
 
-    @NotBlank(message = "La direccion no puede estar vacia")
+    @NotBlank(message = "La dirección no puede estar vacía")
     private String direccion;
 
-    @NotNull(message = "El Id de la comuna no puede ir vacia")
+    @NotNull(message = "El Id de la comuna no puede ir vacío")
     private Long comunaid;
 }
