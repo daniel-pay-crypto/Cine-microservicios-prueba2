@@ -1,11 +1,9 @@
 package com.cine.ms_sucursales.service;
 
-import static java.lang.Math.log;
-
-import com.cine.ms_sucursales.client.ComunaClient;
 import com.cine.ms_sucursales.dto.SucursalDTO;
 import com.cine.ms_sucursales.model.Sucursal;
 import com.cine.ms_sucursales.repository.SucursalRepository;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException; 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,7 @@ public class SucursalService {
     private SucursalRepository sucursalRepository;
     
     @Autowired
-    private ComunaClient comunaClient;
+    private WebClient.Builder webClientBuilder;
 
     public List<SucursalDTO> listarTodas() {
         log.info("Obteniendo listado de todas las sucursales");
@@ -84,8 +82,16 @@ public class SucursalService {
 
     private void validarComuna(Long comunaId) {
         try {
-            log.info("Verificando existencia de comuna ID: {} en ms-ubicacion...", comunaId);
-            comunaClient.obtenerPorId(comunaId);
+            log.info("Verificando existencia de comuna ID: {} en ms-ubicacion usando WebClient...", comunaId);
+            
+            //hace la llamada directa al ms_ubicacion
+            webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8082/api/v2/comunas/" + comunaId)
+                    .retrieve()
+                    .bodyToMono(Object.class)
+                    .block();
+                    
             log.info("Comuna validada con éxito.");
         } catch (WebClientResponseException.NotFound e) {
             log.error("La comuna ID {} no existe.", comunaId);
