@@ -5,7 +5,6 @@ import com.cine.ms_sucursales.dto.SucursalDTO;
 import com.cine.ms_sucursales.model.Sucursal;
 import com.cine.ms_sucursales.repository.SucursalRepository;
 import feign.FeignException; 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class SucursalService {
     private SucursalRepository sucursalRepository;
     
     @Autowired
-    private final ComunaClient comunaClient; 
+    private ComunaClient comunaClient;
 
     public List<SucursalDTO> listarTodas() {
         log.info("Obteniendo listado de todas las sucursales");
@@ -29,48 +28,58 @@ public class SucursalService {
                 .collect(Collectors.toList());
     }
 
-    public SucursalDTO guardar(Sucursal sucursal) {
-        // 1. VALIDACIÓN CON OPENFEIGN
-        validarComuna(sucursal.getComunaId());
+    public SucursalDTO guardar(SucursalDTO dto) {
+        validarComuna(dto.getComunaid());
 
-        // 2. GUARDADO
-        log.info("Guardando nueva sucursal: {}", sucursal.getNombre());
+        log.info("Guardando nueva sucursal: {}", dto.getNombre());
+        Sucursal sucursal = Sucursal.builder()
+                .nombre(dto.getNombre())
+                .direccion(dto.getDireccion())
+                .comunaId(dto.getComunaid())
+                .build();
+
         Sucursal guardada = sucursalRepository.save(sucursal);
         return mapToDTO(guardada);
     }
 
-    public SucursalDTO actualizar(Long id, Sucursal detalles) {
-        // 1. VALIDAR SI LA SUCURSAL EXISTE
+    public SucursalDTO actualizar(Long id, SucursalDTO dtoDetalles) {
         log.info("Actualizando sucursal con ID: {}", id);
         Sucursal sucursal = sucursalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
         
-        // 2. VALIDAR LA COMUNA NUEVA CON OPENFEIGN
-        validarComuna(detalles.getComunaId());
+        validarComuna(dtoDetalles.getComunaid());
 
-        // 3. ACTUALIZAR Y GUARDAR
-        sucursal.setNombre(detalles.getNombre());
-        sucursal.setDireccion(detalles.getDireccion());
-        sucursal.setComunaId(detalles.getComunaId()); 
+        sucursal.setNombre(dtoDetalles.getNombre());
+        sucursal.setDireccion(dtoDetalles.getDireccion());
+        sucursal.setComunaId(dtoDetalles.getComunaid()); 
         
         return mapToDTO(sucursalRepository.save(sucursal));
     }
 
     public void eliminar(Long id) {
         log.warn("Eliminando sucursal ID: {}", id);
+        if (!sucursalRepository.existsById(id)) {
+            throw new RuntimeException("La sucursal con ID " + id + " no existe.");
+        }
         sucursalRepository.deleteById(id);
     }
 
-    private SucursalDTO mapToDTO(Sucursal sucursal) {
-        SucursalDTO dto = new SucursalDTO();
-        dto.setId(sucursal.getId());
-        dto.setNombre(sucursal.getNombre());
-        dto.setDireccion(sucursal.getDireccion());
-        dto.setComunaid(sucursal.getComunaId()); 
-        return dto;
+    public SucursalDTO buscarPorId(Long id) {
+        log.info("Buscando sucursal con ID: {}", id);
+        Sucursal sucursal = sucursalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("La sucursal con ID " + id + " no existe."));
+        return mapToDTO(sucursal);
     }
 
-    // MÉTODO PRIVADO PARA REUTILIZAR LA VALIDACIÓN
+    private SucursalDTO mapToDTO(Sucursal sucursal) {
+        return SucursalDTO.builder()
+                .id(sucursal.getId())
+                .nombre(sucursal.getNombre())
+                .direccion(sucursal.getDireccion())
+                .comunaid(sucursal.getComunaId())
+                .build();
+    }
+
     private void validarComuna(Long comunaId) {
         try {
             log.info("Verificando existencia de comuna ID: {} en ms-ubicacion...", comunaId);
@@ -84,12 +93,4 @@ public class SucursalService {
             throw new RuntimeException("Error interno al validar la comuna. Intente más tarde.");
         }
     }
-
-    public SucursalDTO buscarPorId(Long id) {
-        log.info("Buscando sucursal con ID: {}", id);
-        Sucursal sucursal = sucursalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("La sucursal con ID " + id + " no existe."));
-        return mapToDTO(sucursal);
-    }
-
 }
