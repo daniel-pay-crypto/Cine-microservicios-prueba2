@@ -55,7 +55,7 @@ public class SalaService {
             // NOTA tegno q ajustar el puerto para ms-sucursales
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8082/api/v1/sucursal/" + salaDTO.getSucursalId())
+                    .uri("http://localhost:8086/api/v1/sucursal/" + salaDTO.getSucursalId())
                     .retrieve()
                     .bodyToMono(Void.class)
                     .block();
