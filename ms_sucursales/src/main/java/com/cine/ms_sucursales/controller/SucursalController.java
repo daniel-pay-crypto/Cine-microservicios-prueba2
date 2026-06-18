@@ -1,11 +1,8 @@
 package com.cine.ms_sucursales.controller;
 
-import com.cine.ms_sucursales.dto.SucursalDTO;
-import com.cine.ms_sucursales.model.Sucursal;
-import com.cine.ms_sucursales.service.SucursalService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +13,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
+
+import com.cine.ms_sucursales.dto.SucursalDTO;
+import com.cine.ms_sucursales.service.SucursalService;
+
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -33,16 +35,16 @@ public class SucursalController {
     }
 
     @PostMapping
-    public ResponseEntity<SucursalDTO> crear(@Valid @RequestBody Sucursal sucursal) {
-        log.info("Recibida petición POST para crear sucursal: {}", sucursal.getNombre());
-        SucursalDTO nuevaSucursal = sucursalService.guardar(sucursal);
+    public ResponseEntity<SucursalDTO> crear(@Valid @RequestBody SucursalDTO sucursalDTO) { 
+        log.info("Recibida petición POST para crear sucursal: {}", sucursalDTO.getNombre());
+        SucursalDTO nuevaSucursal = sucursalService.guardar(sucursalDTO);
         return new ResponseEntity<>(nuevaSucursal, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SucursalDTO> actualizar(@PathVariable Long id, @Valid @RequestBody Sucursal sucursalDetalles) {
+    public ResponseEntity<SucursalDTO> actualizar(@PathVariable Long id, @Valid @RequestBody SucursalDTO sucursalDetallesDTO) {
         log.info("Recibida petición PUT para actualizar sucursal con ID: {}", id);
-        SucursalDTO sucursalActualizada = sucursalService.actualizar(id, sucursalDetalles);
+        SucursalDTO sucursalActualizada = sucursalService.actualizar(id, sucursalDetallesDTO); 
         return ResponseEntity.ok(sucursalActualizada);
     }
 
@@ -58,5 +60,4 @@ public class SucursalController {
         log.info("Recibida petición GET para buscar sucursal con ID: {}", id);
         return ResponseEntity.ok(sucursalService.buscarPorId(id));
     }
-    
 }
