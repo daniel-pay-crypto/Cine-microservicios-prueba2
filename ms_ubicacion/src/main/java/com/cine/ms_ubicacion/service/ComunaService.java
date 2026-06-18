@@ -40,7 +40,7 @@ public class ComunaService {
         comuna.setNombre(comunaDTO.getNombre());
         comuna.setRegion(region);
         Comuna guardada = comunaRepository.save(comuna);
-        log.info("Comuna guardada:  en la región ", guardada.getNombre(), region.getNombre());
+        log.info("Comuna guardada: {} en la región {}", guardada.getNombre(), region.getNombre());
         
         return mapToDTO(guardada);
     }
