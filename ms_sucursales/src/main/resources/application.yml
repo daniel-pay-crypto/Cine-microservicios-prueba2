@@ -1,0 +1,36 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: ms-sucursales
+  profiles:
+    active: dev 
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_cine_sucursales?createDatabaseIfNotExist=true
+    username: root
+    password: 
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update 
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:mysql://tu-host-remoto:3306/db_cine_sucursales
+    username: root
+    password: tu-password-seguro
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none 
