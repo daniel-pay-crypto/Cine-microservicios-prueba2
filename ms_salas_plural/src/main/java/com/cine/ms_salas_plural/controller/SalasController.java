@@ -1,9 +1,8 @@
 package com.cine.ms_salas_plural.controller;
 
-import com.cine.ms_salas_plural.dto.SalasDTO;
-import com.cine.ms_salas_plural.service.SalasService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
+
+import com.cine.ms_salas_plural.dto.SalasDTO;
+import com.cine.ms_salas_plural.service.SalasService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v2/salas")
@@ -34,9 +37,9 @@ public class SalasController {
     }
 
     @GetMapping("/{salaId}")
-    public ResponseEntity<SalasDTO> obtenerPorSalaId(@PathVariable("salaId") Long salaId) {
-        SalasDTO sala = salasService.obtenerPorSalaId(salaId);
-        return ResponseEntity.ok(sala); // Retorna 200 OK con los datos
+    public ResponseEntity<List<SalasDTO>> obtenerPorSalaId(@PathVariable("salaId") Long salaId) {
+        List<SalasDTO> salas = salasService.obtenerPorSalaId(salaId);
+        return ResponseEntity.ok(salas); 
     }
 
 }

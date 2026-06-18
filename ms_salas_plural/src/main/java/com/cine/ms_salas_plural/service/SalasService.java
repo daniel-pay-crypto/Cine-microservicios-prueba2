@@ -3,13 +3,16 @@ package com.cine.ms_salas_plural.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+
 import com.cine.ms_salas_plural.dto.SalasDTO;
 import com.cine.ms_salas_plural.model.Salas;
 import com.cine.ms_salas_plural.repository.SalasRepository;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -69,10 +72,14 @@ public class SalasService {
                 .collect(Collectors.toList());
     }
 
-    public SalasDTO obtenerPorSalaId(Long salaId) {
-        Salas sala = salasRepository.findBySalaId(salaId)
-                .orElseThrow(() -> new RuntimeException("Programación para la sala con ID " + salaId + " no encontrada"));
-        return mapToDTO(sala);
+    public List<SalasDTO> obtenerPorSalaId(Long salaId) {
+        List<Salas> salas = salasRepository.findBySalaId(salaId);
+        if (salas.isEmpty()) {
+            throw new RuntimeException("Programación para la sala física con ID " + salaId + " no encontrada");
+        }
+        return salas.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     private SalasDTO mapToDTO(Salas entity) {
