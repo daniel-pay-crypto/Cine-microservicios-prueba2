@@ -87,7 +87,7 @@ public class SucursalService {
             //hace la llamada directa al ms_ubicacion
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8082/api/v2/comunas/" + comunaId)
+                    .uri("http://localhost:8091/api/v2/comunas/" + comunaId)
                     .retrieve()
                     .bodyToMono(Object.class)
                     .block();
