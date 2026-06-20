@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cine.ms_tickets.model.Ticket;
 
-@Repository
+@Repository 
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
     // Busca todos los tickets que ha comprado un cliente específico

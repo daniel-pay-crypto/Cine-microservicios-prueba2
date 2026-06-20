@@ -1,14 +1,11 @@
 package com.cine.ms_tickets.model;
 
-import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,13 +22,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tickets")
 public class Ticket {
-    
+    //Atributos de la entidad Ticket
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank (message = "El asiento es obligatorio")
-    @Size(min = 2, max = 100, message = "El asiento debe tener entre 3 y 100 caracteres")
+    @Size(min = 2, max = 100, message = "El asiento debe tener entre 2 y 100 caracteres")
     @Column(nullable = false, length = 100)
     private String puesto;
 
@@ -40,15 +37,13 @@ public class Ticket {
     @Column(nullable = false)
     private Integer precio;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    //Columnas para las relaciones con otras entidades (Cliente, Pelicula, Asiento)
+    @Column(name = "cliente_id", nullable = false)
+    private Integer clienteId;
 
-    @ManyToOne
-    @JoinColumn(name = "pelicula_id")
-    private Pelicula pelicula;
+    @Column(name = "pelicula_id", nullable = false)
+    private Integer peliculaId;
 
-    @OneToOne
-    @JoinColumn(name = "asiento_id")
-    private Asiento asiento;
+    @Column(name = "asiento_id", nullable = false)
+    private Integer asientoId;
 }
