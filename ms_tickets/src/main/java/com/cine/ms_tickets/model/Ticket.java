@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tickets")
 public class Ticket {
+    
     //Atributos de la entidad Ticket
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
