@@ -17,8 +17,15 @@ spring:
     show-sql: 'true'
 
   profiles:
-    active: dev 
+    active: dev
 
+  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
 ---
 
 spring:
