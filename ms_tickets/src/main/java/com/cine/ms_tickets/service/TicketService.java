@@ -29,10 +29,41 @@ public class TicketService {
 
 //METODOS DE LA LOGICA DE NEGOCIO
 
+    //Metodo publico para listar todos los tickets emitidos
+    public List<TicketResponse> listarTodos() {
+        return ticketRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    //Metodo publico para buscar un ticket por su ID
+    public TicketResponse buscarPorId(Integer id) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ticket no encontrado con el ID: " + id)); 
+        return mapToResponse(ticket);
+    }
+
+
+    //Metodo publico para listar todos los tickets emitidos a un cliente en especifico
+    public List<TicketResponse> listarPorCliente(Integer clienteId) {
+        return ticketRepository.findByClienteId(clienteId).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
 
 
 
-
+    //Metodo privado para mapear de Ticket a TicketResponse
+    private TicketResponse mapToResponse(Ticket ticket) {
+        return TicketResponse.builder()
+                .id(ticket.getId())
+                .puesto(ticket.getPuesto())
+                .precio(ticket.getPrecio())
+                .clienteId(ticket.getClienteId())
+                .peliculaId(ticket.getPeliculaId())
+                .asientoId(ticket.getAsientoId())
+                .build();
+    }
 
 
 
@@ -76,41 +107,9 @@ public class TicketService {
         Ticket guardado = ticketRepository.save(ticket);
         log.info("Ticket emitido con exito, su ID es: {}", guardado.getId());
         return mapToResponse(guardado);
+    
     }
 
-    //Metodo publico para listar todos los tickets emitidos
-    public List<TicketResponse> listarTodos() {
-        return ticketRepository.findAll().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    //Metodo publico para buscar un ticket por su ID
-    public TicketResponse buscarPorId(Integer id) {
-        Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ticket no encontrado con el ID: " + id)); 
-        return mapToResponse(ticket);
-    }
-
-
-    //Metodo publico para listar todos los tickets emitidos a un cliente en especifico
-    public List<TicketResponse> listarPorCliente(Integer clienteId) {
-        return ticketRepository.findByClienteId(clienteId).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-
-
-    //Metodo privado para mapear de Ticket a TicketResponse
-    private TicketResponse mapToResponse(Ticket ticket) {
-        return TicketResponse.builder()
-                .id(ticket.getId())
-                .puesto(ticket.getPuesto())
-                .precio(ticket.getPrecio())
-                .clienteId(ticket.getClienteId())
-                .peliculaId(ticket.getPeliculaId())
-                .asientoId(ticket.getAsientoId())
-                .build();
-    }
 }
+
+

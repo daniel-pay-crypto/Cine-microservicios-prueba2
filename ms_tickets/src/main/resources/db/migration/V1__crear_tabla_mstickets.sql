@@ -1,11 +1,10 @@
 CREATE TABLE tickets (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    cliente_id BIGINT NOT NULL,
-    pelicula_id BIGINT NOT NULL,
-    asiento VARCHAR(10) NOT NULL,
-    precio DOUBLE NOT NULL,
-    estado VARCHAR(50) NOT NULL DEFAULT 'Activo',
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    pelicula_id INT NOT NULL,
+    asiento_id INT NOT NULL,
+    puesto VARCHAR(100) NOT NULL,
+    precio INT NOT NULL
 );
 
 -- Datos de prueba iniciales para esta base de datos ms_tickets.
