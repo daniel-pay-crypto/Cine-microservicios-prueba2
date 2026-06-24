@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SalasService {
 
     @Autowired
-    private SalasRepository salasRepository; 
+    private SalasRepository salasRepository;
 
     
     @Autowired
@@ -34,7 +34,7 @@ public class SalasService {
             //ajustar el puerto y la ruta según donde corra _sala física
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8083/api/v1/salas-fisicas/" + dto.getSalaId()) 
+                    .uri("http://ms-salas_plural/api/v1/salas" + dto.getSalaId()) 
                     .retrieve()
                     .bodyToMono(Object.class)
                     .block();
