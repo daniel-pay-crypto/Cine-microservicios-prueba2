@@ -18,9 +18,8 @@ public class SalaService {
     @Autowired
     private SalaRepository salaRepository;
 
-
     @Autowired
-    private WebClient.Builder webClientBuilder; 
+    private WebClient.Builder webClientBuilder;
 
     public List<SalaDTO> listarTodas() {
         return salaRepository.findAll().stream()
@@ -30,16 +29,14 @@ public class SalaService {
 
     public SalaDTO guardar(SalaDTO salaDTO) {
         
-        // --- 1. VALIDAMOS QUE EL TIPO EXISTA USANDO WEBCLIENT ---
         try {
             log.info("Verificando si el tipo de sala ID {} existe...", salaDTO.getTipoId());
-            // Nota tengo q ajustar los puertos
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8081/api/v1/tipo/" + salaDTO.getTipoId())
+                    .uri("http://ms-tipos/api/v1/tipo/" + salaDTO.getTipoId())
                     .retrieve()
                     .bodyToMono(Void.class)
-                    .block(); // block() hace que espere la respuesta
+                    .block();
             log.info("Tipo validado correctamente.");
         } catch (WebClientResponseException.NotFound e) {
             log.error("El tipo con ID {} no existe en ms-tipos.", salaDTO.getTipoId());
@@ -49,13 +46,11 @@ public class SalaService {
             throw new RuntimeException("Error interno al validar el tipo de sala.");
         }
 
-        // --- 2. VALIDAMOS QUE LA SUCURSAL EXISTA USANDO WEBCLIENT ---
         try {
             log.info("Verificando si la sucursal ID {} existe...", salaDTO.getSucursalId());
-            // NOTA tegno q ajustar el puerto para ms-sucursales
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8086/api/v1/sucursal/" + salaDTO.getSucursalId())
+                    .uri("http://ms-sucursales/api/v2/sucursales/" + salaDTO.getSucursalId())
                     .retrieve()
                     .bodyToMono(Void.class)
                     .block();
@@ -68,7 +63,6 @@ public class SalaService {
             throw new RuntimeException("Error interno al validar la sucursal.");
         }
 
-        // --- 3. GUARDAMOS LA SALA ---
         Sala sala = new Sala();
         sala.setNombre(salaDTO.getNombre());
         sala.setCapacidad(salaDTO.getCapacidad());
