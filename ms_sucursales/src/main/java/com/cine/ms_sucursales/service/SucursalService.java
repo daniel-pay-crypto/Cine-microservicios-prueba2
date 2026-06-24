@@ -1,15 +1,18 @@
 package com.cine.ms_sucursales.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+
 import com.cine.ms_sucursales.dto.SucursalDTO;
 import com.cine.ms_sucursales.model.Sucursal;
 import com.cine.ms_sucursales.repository.SucursalRepository;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException; 
+ 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -84,10 +87,9 @@ public class SucursalService {
         try {
             log.info("Verificando existencia de comuna ID: {} en ms-ubicacion usando WebClient...", comunaId);
             
-            //hace la llamada directa al ms_ubicacion
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8091/api/v2/comunas/" + comunaId)
+                    .uri("http://ms-ubicacion/api/v2/comunas/" + comunaId)
                     .retrieve()
                     .bodyToMono(Object.class)
                     .block();
@@ -96,7 +98,7 @@ public class SucursalService {
         } catch (WebClientResponseException.NotFound e) {
             log.error("La comuna ID {} no existe.", comunaId);
             throw new RuntimeException("Error: No se puede proceder porque la Comuna con ID " + comunaId + " no existe.");
-        } catch (WebClientResponseException e) {
+        } catch (Exception e) {
             log.error("Error de comunicación con ms-ubicacion: {}", e.getMessage());
             throw new RuntimeException("Error interno al validar la comuna. Intente más tarde.");
         }
