@@ -1,13 +1,26 @@
 server:
-  port: 8085
+  port: 0
+
+springdoc:
+  api-docs:
+    path: /ms-sucursales/api-docs
+  swagger-ui:
+    path: /doc/swagger-ui/index.html
 
 spring:
   application:
     name: ms-sucursales
   profiles:
     active: dev
----
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+
+---
 spring:
   config:
     activate:
@@ -15,13 +28,13 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/db_cine_sucursales?createDatabaseIfNotExist=true
     username: root
-    password: 
+    password:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update 
----
+      ddl-auto: update
 
+---
 spring:
   config:
     activate:
@@ -33,4 +46,4 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: none 
+      ddl-auto: none
