@@ -1,9 +1,9 @@
 server:
-  port: '8088'
+  port: 0
 
 springdoc:
   api-docs:
-    path: /api-docs
+    path: /ms-salas-plural/api-docs
   swagger-ui:
     path: /doc/swagger-ui/index.html
 
@@ -15,7 +15,6 @@ spring:
     baseline-on-migrate: 'true'
   jpa:
     show-sql: 'true'
-
   profiles:
     active: dev
 
@@ -24,10 +23,9 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
   instance:
-    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.value}
 
 ---
-
 spring:
   config:
     activate:
@@ -42,7 +40,6 @@ spring:
       ddl-auto: update
 
 ---
-
 spring:
   config:
     activate:
@@ -57,7 +54,6 @@ spring:
       ddl-auto: update
 
 ---
-
 spring:
   config:
     activate:
