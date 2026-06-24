@@ -22,21 +22,18 @@ public class SalasService {
     @Autowired
     private SalasRepository salasRepository;
 
-    
     @Autowired
     private WebClient.Builder webClientBuilder;
 
     public SalasDTO crearSalas(SalasDTO dto) {
         log.info("Intentando programar una nueva película en la sala física ID: {}", dto.getSalaId());
 
-
         try {
-            //ajustar el puerto y la ruta según donde corra _sala física
             webClientBuilder.build()
                     .get()
-                    .uri("http://ms-salas_plural/api/v1/salas" + dto.getSalaId()) 
+                    .uri("http://ms-salas/api/v1/sala/" + dto.getSalaId()) 
                     .retrieve()
-                    .bodyToMono(Object.class)
+                    .bodyToMono(Void.class)
                     .block();
                     
             log.info("Sala física validada correctamente.");
@@ -44,7 +41,7 @@ public class SalasService {
         } catch (WebClientResponseException.NotFound e) {
             log.error("La sala física con ID {} no existe.", dto.getSalaId());
             throw new RuntimeException("No se puede programar. La sala física con ID " + dto.getSalaId() + " no existe.");
-        } catch (WebClientResponseException e) {
+        } catch (Exception e) {
             log.error("Error de conexión con ms-salas físicas: {}", e.getMessage());
             throw new RuntimeException("Error interno al validar la sala física.");
         }
