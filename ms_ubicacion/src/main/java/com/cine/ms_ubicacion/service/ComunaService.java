@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import com.cine.ms_ubicacion.dto.ComunaDTO;
 import com.cine.ms_ubicacion.model.Comuna;
@@ -25,8 +24,6 @@ public class ComunaService {
     @Autowired
     private RegionRepository regionRepository;
 
-    @Autowired
-    private WebClient.Builder webClientBuilder;
 
     public List<ComunaDTO> listarTodas() {
         return comunaRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
