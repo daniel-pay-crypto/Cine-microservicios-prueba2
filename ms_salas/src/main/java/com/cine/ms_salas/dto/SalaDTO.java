@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class SalaDTO {
 
     private Long id; 
@@ -26,4 +25,13 @@ public class SalaDTO {
 
     @NotNull(message = "El ID del tipo de sala es obligatorio")
     private Integer tipoId;
+
+    //Igualmente que el model tuve q hacer el constructor manual a ver si se solucionaban unos erroes
+    public SalaDTO(Long id, String nombre, Integer capacidad, Long sucursalId, Integer tipoId) {
+        this.id = id;
+        this.nombre = nombre;
+        this.capacidad = capacidad;
+        this.sucursalId = sucursalId;
+        this.tipoId = tipoId;
+    }
 }
