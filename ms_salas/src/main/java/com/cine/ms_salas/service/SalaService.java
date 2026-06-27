@@ -35,7 +35,7 @@ public class SalaService {
                     .get()
                     .uri("http://ms-tipos/api/v1/tipo/" + salaDTO.getTipoId())
                     .retrieve()
-                    .bodyToMono(Void.class)
+                    .bodyToMono(Object.class)
                     .block();
             log.info("Tipo validado correctamente.");
         } catch (WebClientResponseException.NotFound e) {
@@ -52,7 +52,7 @@ public class SalaService {
                     .get()
                     .uri("http://ms-sucursales/api/v2/sucursales/" + salaDTO.getSucursalId())
                     .retrieve()
-                    .bodyToMono(Void.class)
+                    .bodyToMono(Object.class)
                     .block();
             log.info("Sucursal validada correctamente.");
         } catch (WebClientResponseException.NotFound e) {
