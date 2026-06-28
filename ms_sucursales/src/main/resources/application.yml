@@ -28,7 +28,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/db_cine_sucursales?createDatabaseIfNotExist=true
     username: root
-    password:
+    password: 
   jpa:
     show-sql: true
     hibernate:
