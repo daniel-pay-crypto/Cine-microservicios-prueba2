@@ -61,6 +61,8 @@ public class ClienteServiceTest {
 
     @Test
     void testObtenerClienteConTickets() {
+
+
         // GIVEN: Creamos nuestros datos simulados con DataFaker
         Long idSimulado = faker.number().randomNumber();
         String nombreAleatorio = faker.name().firstName();
@@ -72,7 +74,9 @@ public class ClienteServiceTest {
         clienteFalso.setApellido(apellidoAleatorio);
         clienteFalso.setEmail(faker.internet().emailAddress());
 
-        // Entrenamos al Mock: Cuando el repositorio busque este ID, responderá con nuestro cliente falso
+        
+
+        // aquintrenamos al Mock: Cuando el repositorio busque este ID, responderá con nuestro cliente falso
         when(clienteRepository.findById(idSimulado)).thenReturn(Optional.of(clienteFalso));
 
         // Entrenamos al Mock del WebClient para que no intente conectarse de verdad
@@ -81,12 +85,15 @@ public class ClienteServiceTest {
         when(requestHeadersUriSpec.uri(anyString())).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
 
-        // Simulamos un ticket falso usando Faker
+        // simulo un ticket falso usando Faker... era
         TicketDTO ticketFalso = new TicketDTO();
+
+
         ticketFalso.setId(faker.number().randomNumber());
-        ticketFalso.setAsiento(faker.letterify("?#")); // Ejemplo: A1, B2
+        ticketFalso.setAsiento(faker.letterify("?#"));
         ticketFalso.setPrecio((double) faker.number().numberBetween(1000, 10000));
         TicketDTO[] ticketsArray = {ticketFalso};
+
 
         when(responseSpec.bodyToMono(TicketDTO[].class)).thenReturn(Mono.just(ticketsArray));
 
@@ -98,7 +105,8 @@ public class ClienteServiceTest {
         assertEquals(nombreAleatorio + " " + apellidoAleatorio, resultado.getNombreCompleto(), "El nombre transformado al DTO debe coincidir con el de la DB");
         assertEquals(1, resultado.getTickets().size(), "Debe contener exactamente 1 ticket simulado");
 
-        // Verificamos que el servicio realmente haya consultado al repositorio exactamente 1 vez
+
+        // veifico que el service realmente haya consultado al repositorio exactamente 1 vez.
         verify(clienteRepository, times(1)).findById(idSimulado);
     }
 
