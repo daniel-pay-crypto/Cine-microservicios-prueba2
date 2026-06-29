@@ -1,20 +1,19 @@
 package com.cine.ms_cliente.controller;
 
-//import com.cine.ms_cliente.assembler.ClienteModelAssembler;
 import com.cine.ms_cliente.dto.ClienteDetalleDTO;
 import com.cine.ms_cliente.model.Cliente;
 import com.cine.ms_cliente.service.ClienteService;
-import io.swagger.v3.oas.annotations.Operation; //eye/esta
-import io.swagger.v3.oas.annotations.tags.Tag; //eye/esta
+import io.swagger.v3.oas.annotations.Operation; 
+import io.swagger.v3.oas.annotations.tags.Tag; 
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse; //eye
-import io.swagger.v3.oas.annotations.responses.ApiResponses; //eye
+import io.swagger.v3.oas.annotations.responses.ApiResponse; 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.slf4j.Logger; //eye
-import org.slf4j.LoggerFactory; //eye
+import org.slf4j.Logger; 
+import org.slf4j.LoggerFactory; 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityModel; //eye
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder; //eye 
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder; 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

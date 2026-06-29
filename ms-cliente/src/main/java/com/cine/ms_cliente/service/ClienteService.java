@@ -12,19 +12,24 @@ import java.util.Arrays;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono; //EYE
+import reactor.core.publisher.Mono;
 
 // Servicio para manejar la lógica de negocio relacionada con Clientes (Cerebro de Ms-Clientes)
 @Service
 public class ClienteService {
 
+    
     private static final Logger log = LoggerFactory.getLogger(ClienteService.class);
 
     @Autowired
     private ClienteRepository repository;
 
+
+
     @Autowired
     private WebClient.Builder webClientBuilder;
+
+
 
     public ClienteDetalleDTO obtenerClienteConTickets(Long id) {
         log.info("Buscando cliente con el id: {}", id);
@@ -39,7 +44,7 @@ public class ClienteService {
             // Capturamos la lista como un Array y la convertimos a una Lista, esto es porque WebClient no puede convertir directamente a List, pero si a Array.
             TicketDTO[] ticketsArray = webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8082/api/v1/tickets/cliente/" + cliente.getId())
+                    .uri("http://ms-tickets/api/v1/tickets/cliente/" + cliente.getId())
                     .retrieve()
                     .bodyToMono(TicketDTO[].class)
                     .block(); // El .block() es lo que hace que espere la respuesta de ms-tickets, es como decir "espera un momento, que estoy hablando con ms-tickets".
@@ -56,9 +61,13 @@ public class ClienteService {
         return dto;
     }
 
+
+
     public Cliente guardar(Cliente cliente) {
         return repository.save(cliente);
     }
+
+
 
     public Cliente buscarPorId(Long id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Cliente no encontrado."));
