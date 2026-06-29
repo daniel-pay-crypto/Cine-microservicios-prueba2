@@ -14,9 +14,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;import static org.mockito.ArgumentMatchers.anyString;
+
 
 @ExtendWith(MockitoExtension.class)
 public class TicketServiceTest {
@@ -53,33 +62,43 @@ public class TicketServiceTest {
 
     @Test
     void testGuardarTicket_Exitoso() {
-        // GIVEN: Datos falsos para la petición
+        // datos falsos para la petición
         Integer clienteIdSimulado = faker.number().randomDigitNotZero();
         Integer asientoIdSimulado = faker.number().randomDigitNotZero();
         
         TicketRequest request = new TicketRequest();
         request.setPuesto(faker.letterify("?#"));
+
         request.setPrecio((double) faker.number().numberBetween(1000, 5000));
         request.setClienteId(clienteIdSimulado);
+
         request.setAsientoId(asientoIdSimulado);
         request.setPeliculaId(faker.number().randomDigitNotZero());
 
-        // Entrenamos los mocks del WebClient (simulando que ms-cliente responde HTTP 200 OK)
+
+
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
+
         when(requestHeadersUriSpec.uri(anyString())).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Void.class)).thenReturn(Mono.empty()); // Mono.empty() simula Void exitoso
 
-        // Simulamos que el asiento NO está ocupado en la base de datos
+
+
+
+        // Simulo que el asiento no está ocupado en la base de datos:
         when(ticketRepository.existsByAsientoId(asientoIdSimulado)).thenReturn(false);
 
-        // Simulamos el guardado en el repositorio
+        // Simulo el guardado en el repositorio:
         Ticket ticketGuardado = Ticket.builder()
+        
                 .id(faker.number().randomDigitNotZero())
                 .puesto(request.getPuesto())
                 .precio(request.getPrecio())
+
                 .clienteId(request.getClienteId())
+
                 .asientoId(request.getAsientoId())
                 .peliculaId(request.getPeliculaId())
                 .build();
@@ -87,40 +106,48 @@ public class TicketServiceTest {
         // Usamos any(Ticket.class) porque dentro del servicio se construye una nueva instancia de Ticket
         when(ticketRepository.save(any(Ticket.class))).thenReturn(ticketGuardado);
 
-        // WHEN: Ejecutamos el método a probar
+        // WHEN: ejecuto el método a probar
         TicketResponse resultado = ticketService.guardarTicket(request);
 
-        // THEN: Validaciones básicas de que la lógica funcionó sin tocar la red ni la DB real
+        // THEN: validaciones básicas de que la lógica funciono:
         assertNotNull(resultado);
         assertEquals(request.getPuesto(), resultado.getPuesto());
         verify(ticketRepository, times(1)).save(any(Ticket.class));
     }
 
     @Test
+
     void testGuardarTicket_ErrorAsientoOcupado() {
-        // GIVEN: Un asiento que ya existe en el sistema
+
+        // GIVEN: un asiento que ya existe en Mi sistema:
         Integer asientoOcupado = 55;
         TicketRequest request = new TicketRequest();
         request.setClienteId(1);
         request.setAsientoId(asientoOcupado);
 
+
+
         // Mocks del WebClient para que la validación de cliente pase bien
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
+
         when(requestHeadersUriSpec.uri(anyString())).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Void.class)).thenReturn(Mono.empty());
 
-        // Entrenamos al repositorio para que diga que el asiento SÍ está ocupado
+
+
+        // entreno al repositorio para que diga que el asiento si esta ocupado
         when(ticketRepository.existsByAsientoId(asientoOcupado)).thenReturn(true);
 
-        // WHEN & THEN: Verificamos que lance la excepción esperada por negocio
+        
+        // WHEN & THEN: verifico que lance la excepción esperada:
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             ticketService.guardarTicket(request);
         });
 
+
         assertEquals("Error: Lo sentimos, el asiento ya ha sido vendido.", exception.getMessage());
-        // Verificamos que el flujo se cortó y NUNCA intentó guardar en la base de datos
         verify(ticketRepository, never()).save(any(Ticket.class));
     }
 }

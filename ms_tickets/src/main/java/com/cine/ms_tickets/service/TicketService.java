@@ -27,7 +27,9 @@ public class TicketService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-//METODOS DE LA LOGICA DE NEGOCIO
+
+    
+//Metodos para la logica de negocio:
 
     //Metodo publico para listar todos los tickets emitidos
     public List<TicketResponse> listarTodos() {
