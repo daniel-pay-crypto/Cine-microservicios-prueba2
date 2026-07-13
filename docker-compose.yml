@@ -1,0 +1,111 @@
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    networks:
+      - cine-network
+    command: --default-authentication-plugin=mysql_native_password
+
+  ms-tickets:
+    build: ./ms_tickets
+    container_name: ms-tickets
+    ports:
+      - "8082:8082"
+    environment:
+      - SERVER_PORT=8082
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/db_cine_tickets_prod?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - mysql-db
+    networks:
+      - cine-network
+
+  ms-director:
+    build: ./ms-director
+    container_name: ms-director
+    ports:
+      - "8085:8085"
+    environment:
+      - SERVER_PORT=8085
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/db_cine_director_prod?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - mysql-db
+    networks:
+      - cine-network
+
+  ms-genero:
+    build: ./ms-genero
+    container_name: ms-genero
+    ports:
+      - "8086:8086"
+    environment:
+      - SERVER_PORT=8086
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/db_cine_genero_prod?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - mysql-db
+    networks:
+      - cine-network
+
+  ms-salas:
+    build: ./ms_salas
+    container_name: ms-salas
+    ports:
+      - "8088:8088"
+    environment:
+      - SERVER_PORT=8088
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/db_cine_salas_prod?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - mysql-db
+    networks:
+      - cine-network
+
+  ms-asiento:
+    build: ./ms-asientos
+    container_name: ms-asiento
+    ports:
+      - "8089:8089"
+    environment:
+      - SERVER_PORT=8089
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/db_cine_asiento_prod?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - mysql-db
+    networks:
+      - cine-network
+
+  ms-tipos:
+    build: ./ms-tipos
+    container_name: ms-tipos
+    ports:
+      - "8092:8092"
+    environment:
+      - SERVER_PORT=8092
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/db_cine_tipos_prod?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - mysql-db
+    networks:
+      - cine-network
+
+networks:
+  cine-network:
+    driver: bridge
